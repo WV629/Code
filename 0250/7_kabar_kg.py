@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-# TODO : https://www.kt.kz/rus/search?page=1&query=%D0%BA%D0%B8%D1%82%D0%B0%D0%B9
+# TODO : https://kabar.kg/search/?q=%D0%BA%D0%B8%D1%82%D0%B0%D0%B9
 import re
 import requests
 from urllib.parse import urljoin
@@ -19,7 +19,7 @@ class Spider(object):
     def get_res(self,url):
         for _ in range(5):
             try:
-                res = requests.get(url,headers=self.headers,proxies = self.proxeis,timeout=5)
+                res = requests.get(url,headers=self.headers,proxies = None,timeout=5)
                 if res.status_code == 200:
                     return etree.HTML(res.content.decode())
             except Exception as e:
@@ -30,7 +30,7 @@ class Spider(object):
     def parse(self,url):
         html = self.get_res(url)
         # 获取新闻列表
-        divs = html.xpath("//div[@class='block-content']/div[contains(@class,'article-big')]")
+        divs = html.xpath("//div[@class='search-context']/article")
         th = []
         for div in divs:
             t = Thread(target=self.thread_parse,args=(div,))
@@ -41,20 +41,16 @@ class Spider(object):
 
     def thread_parse(self,div):
         list1 = {}
-        list1['标题'] = div.xpath(".//h2/a/text()")[0].strip()
-        list1['链接'] = urljoin(url,div.xpath(".//h2/a/@href")[0])
-        try:
-            list1['图片地址'] = ''.join(div.xpath(".//img/@src"))
-        except:
-            list1['图片地址'] = ''
+        list1['链接'] = urljoin(url,div.xpath(".//h3/a/@href")[0])
         detail_html = self.get_res(list1['链接'])
+        list1['标题'] = detail_html.xpath("//title/text()")[0].strip()
         try:
-            list1['日期'] = detail_html.xpath("//span[@class='icon-text']/following-sibling::text()")[0].strip().split(", ")[-1].replace('.',' ').split(" ")
-            list1['日期'] = list1['date'][2] + '-' + list1['date'][1] + '-' + list1['date'][0].zfill(2)
+            list1['日期'] = ''.join(detail_html.xpath("//span[@class='article-date']/text()")).strip().split(" ")[0].split("/")
+            list1['日期'] = '20'+list1['日期'][2] + '-' + list1['日期'][1].zfill(2) + '-' + list1['日期'][0].zfill(2)
         except:
             list1['日期'] = ''
         try:
-            list1['内容'] = ''.join([i.strip() for i in detail_html.xpath("//div[@class='paragraph-row']/div/p//text()") if i.strip() != '']).strip()
+            list1['内容'] = ''.join([i.strip() for i in detail_html.xpath("//div[@class='post-content clearfix']/p//text()") if i.strip() != '']).strip()
             list1['内容'] = re.sub('\s+',' ',list1['内容'])
         except:
             list1['内容'] = ''
@@ -62,7 +58,10 @@ class Spider(object):
             list1['浏览量'] = ''.join(detail_html.xpath("//h1/following-sibling::div/span[@class='views']/text()")).strip()
         except:
             list1['浏览量'] = ''
-
+        try:
+            list1['图片地址'] = '; '.join(['https://kabar.kg/'+i for i in detail_html.xpath("//article[@class='post-wrapper clearfix']//figure[contains(@class,'image-overlay ')]//img/@src") if '180x120' not in i])
+        except:
+            list1['图片地址'] = ''
         print(list1)
         datas.append(list1)
 
@@ -74,15 +73,7 @@ if __name__ == '__main__':
     datas = []
     print('start ---- ----')
     spider = Spider()
-    page = 282
-    urls = [f'https://khovar.tj/rus/page/{i}/?s=%D0%BA%D0%B8%D1%82%D0%B0%D0%B9' for i in range(1,page+1)]
-    th = []
-    for url in urls:
-    #     t = Thread(target=spider.parse,args=(url,))
-    #     t.start()
-    #     th.append(t)
-    # [t.join() for t in th]
-        print('url = ',url)
-        spider.parse(url)
+    url = 'https://kabar.kg/search/?q=%D0%BA%D0%B8%D1%82%D0%B0%D0%B9'
+    spider.parse(url)
     print('save ---- ----')
-    spider.save(datas,'file/6_khovar_tj')
+    spider.save(datas,'7_kabar_kg')
