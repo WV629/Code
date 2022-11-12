@@ -19,7 +19,7 @@ class Spider(object):
     def get_res(self,url):
         for _ in range(5):
             try:
-                res = requests.get(url,headers=self.headers,proxies = self.proxeis,timeout=5)
+                res = requests.get(url,headers=self.headers,proxies = None,timeout=5)
                 if res.status_code == 200:
                     return etree.HTML(res.content.decode())
             except Exception as e:
@@ -43,9 +43,15 @@ class Spider(object):
         list1 = {}
         list1['链接'] = urljoin(url,div.xpath(".//h3/a/@href")[0])
         detail_html = self.get_res(list1['链接'])
+<<<<<<< HEAD
         list1['标题'] = detail_html.xpath(".//header[@class='post-header']/h1/text()")[0].strip()
         try:
             list1['日期'] = detail_html.xpath("//span[@class='article-date']/text()")[1].strip().split(" ")[0].split("/")
+=======
+        list1['标题'] = detail_html.xpath("//title/text()")[0].strip()
+        try:
+            list1['日期'] = ''.join(detail_html.xpath("//span[@class='article-date']/text()")).strip().split(" ")[0].split("/")
+>>>>>>> 78b4a5f07710ce498610071c5549741b4f6c7e97
             list1['日期'] = '20'+list1['日期'][2] + '-' + list1['日期'][1].zfill(2) + '-' + list1['日期'][0].zfill(2)
         except:
             list1['日期'] = ''
@@ -59,7 +65,11 @@ class Spider(object):
         except:
             list1['浏览量'] = ''
         try:
+<<<<<<< HEAD
             list1['图片地址'] = urljoin(url,''.join(detail_html.xpath(".//div[@class='post-content clearfix']//img/@src")))
+=======
+            list1['图片地址'] = '; '.join(['https://kabar.kg/'+i for i in detail_html.xpath("//article[@class='post-wrapper clearfix']//figure[contains(@class,'image-overlay ')]//img/@src") if '180x120' not in i])
+>>>>>>> 78b4a5f07710ce498610071c5549741b4f6c7e97
         except:
             list1['图片地址'] = ''
         print(list1)
@@ -76,4 +86,8 @@ if __name__ == '__main__':
     url = 'https://kabar.kg/search/?q=%D0%BA%D0%B8%D1%82%D0%B0%D0%B9'
     spider.parse(url)
     print('save ---- ----')
+<<<<<<< HEAD
     spider.save(datas,'file/7_kabar_kg')
+=======
+    spider.save(datas,'7_kabar_kg')
+>>>>>>> 78b4a5f07710ce498610071c5549741b4f6c7e97
