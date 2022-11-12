@@ -46,12 +46,12 @@ class Spider(object):
         detail_html = self.get_res(list1['链接'])
         try:
             list1['日期'] = detail_html.xpath("//h1/following-sibling::div/span[@class='date']/text()")[0].strip().split(",")[0].split(".")
-            list1['日期'] = list1['date'][2] + '-' + list1['date'][1] + '-' + list1['date'][0]
+            list1['日期'] = list1['日期'][2] + '-' + list1['日期'][1] + '-' + list1['日期'][0]
         except:
             list1['日期'] = ''
         try:
             list1['内容'] = ''.join([i.strip() for i in detail_html.xpath("//div[@class='col-md-8']/div[1]/*[position()>1 and position()<last()]//text()") if i.strip() != '']).strip()
-            list1['内容'] = re.sub('\s+',' ',list1['content'])
+            list1['内容'] = re.sub('\s+',' ',list1['内容'])
         except:
             list1['内容'] = ''
         try:
@@ -85,4 +85,4 @@ if __name__ == '__main__':
         print('url = ',url)
         spider.parse(url)
     print('save ---- ----')
-    spider.save(datas,'kt_kz')
+    spider.save(datas,'file/1_www_kt_kz')

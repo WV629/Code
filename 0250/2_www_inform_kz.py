@@ -94,4 +94,4 @@ if __name__ == '__main__':
         print('url = ',url)
         spider.parse(url)
     print('save ---- ----')
-    spider.save(datas,'inform_kz')
+    spider.save(datas,'file/2_www_inform_kz')
