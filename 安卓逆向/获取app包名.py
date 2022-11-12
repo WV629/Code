@@ -1,10 +1,14 @@
 #-*- coding:utf-8 -*-
-"""
-create of author:WV
-----------
-create of datetime:2022/11/3 23:29
-----------
-create of software: PyCharm
-----------
-TODO : 
-"""
+import frida
+
+
+rdev = frida.get_remote_device()
+
+# 获取所有进程的包名
+processes = rdev.enumerate_processes()
+for process in processes:
+    print(process)
+
+# 获取前台运行的app包名
+front_app = rdev.get_frontmost_application()
+print(front_app)

@@ -1,8 +1,0 @@
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1064701.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1064694.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1052078.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1040201.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1040200.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1040198.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1040197.json
-http://www.cbirc.gov.cn/cn/static/data/DocInfo/SelectByDocId/data_docId=1007308.json
